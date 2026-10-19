@@ -1,0 +1,55 @@
+name: Probar y publicar
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Privacidad (sin datos de pacientes)
+        run: python tests/privacidad.py
+      - name: Armar la aplicación
+        run: python build.py
+      - name: Sintaxis JavaScript
+        run: |
+          python -c "import re;h=open('dist/index.html',encoding='utf-8').read();open('app.js','w',encoding='utf-8').write(re.search(r'<script>(.*)</script>',h,re.S).group(1))"
+          node --check app.js && node --check dist/sw.js
+      - name: Pruebas en navegador
+        run: |
+          pip install playwright==1.48.0
+          python -m playwright install --with-deps chromium
+          python tests/smoke.py
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  publicar:
+    if: github.ref == 'refs/heads/main'
+    needs: probar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,15 @@
+# Nunca versionar datos de pacientes ni exportes de sistemas clínicos
+*.xlsx
+*.xls
+*.csv
+*.pdf
+*.docx
+*.doc
+*.ods
+exportes/
+datos_privados/
+
+# Generado por build.py
+dist/
+app.js
+__pycache__/
