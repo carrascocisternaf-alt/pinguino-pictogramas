@@ -7,6 +7,7 @@ Parte del Ecosistema Pingüino APS · CESFAM Limache Viejo, DESAM Limache.
 ## Usar
 
 - **En línea e instalable:** la versión publicada en GitHub Pages se instala desde Edge o Chrome con el botón *Instalar aplicación*. Después funciona sin internet.
+- **Desde un pendrive:** `dist/Pictogramas_pendrive.zip` (también en la web publicada). Se descomprime, doble clic en *Instalar Pictogramas* y queda el ícono en el Escritorio. No necesita internet ni administrador.
 - **Sin instalar:** `dist/Pinguino_Pictogramas.html` funciona abriéndolo directamente (doble clic), también en Firefox.
 
 ## Qué hace
@@ -38,6 +39,7 @@ Cada cambio en `main` se prueba y se publica solo (`.github/workflows/publicar.y
 | `data/` | catálogo: arsenal del CESFAM cruzado con las fichas del Compendio |
 | `public/` | manifiesto e íconos para instalar |
 | `tests/` | privacidad y pruebas en navegador |
+| `instalador/` | instalador para pendrive (Windows) |
 
 ## Validación pendiente
 

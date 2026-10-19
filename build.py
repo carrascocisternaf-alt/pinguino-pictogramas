@@ -29,4 +29,11 @@ pub = re.sub(r'<link rel="icon" href="data:image/svg\+xml[^"]*">',
 (DIST / "Pinguino_Pictogramas.html").write_text(out, encoding="utf-8")
 (DIST / "sw.js").write_text((SRC / "sw.js").read_text(encoding="utf-8").replace("__VERSION__", "v" + version), encoding="utf-8")
 (DIST / ".nojekyll").write_text("")
-print(f"Pingüino Pictogramas {version} → {DIST}")
+# carpeta para pendrive: doble clic en "Instalar Pictogramas" (Windows, sin administrador)
+PEN = DIST / "Pictogramas_pendrive"
+shutil.copytree(ROOT / "instalador", PEN)
+(PEN / "app" / "Pinguino_Pictogramas.html").write_text(out, encoding="utf-8")
+(PEN / "VERSION.txt").write_text("Pingüino Pictogramas " + version + "\r\n", encoding="utf-8")
+shutil.make_archive(str(DIST / "Pictogramas_pendrive"), "zip", DIST, "Pictogramas_pendrive")
+shutil.rmtree(PEN)
+print(f"Pingüino Pictogramas {version} → {DIST} (con Pictogramas_pendrive.zip)")
