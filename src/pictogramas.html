@@ -390,6 +390,23 @@ footer.foot{font-family:var(--font-sign)}
 .seg.esq button+button{border-left:2px solid var(--ink)}
 .seg.esq button[aria-pressed="true"]{background:var(--plate);color:var(--plate-ink)}
 .prevwrap{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto}
+.tk{font-family:Arial,Helvetica,sans-serif}
+.tk-fr{position:absolute;left:1mm;top:1mm;width:98mm;height:68mm;border:.8pt solid #000;border-radius:2.4mm;padding:1.6mm 2mm 1.2mm;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.tk-hd{display:flex;justify-content:space-between;gap:2mm;font-size:7.2pt;line-height:1.1}
+.tk-ad{font-size:5.8pt;line-height:1.1}
+.tk-pac{text-align:center;font-weight:700;font-size:10.5pt;line-height:1.15;overflow-wrap:anywhere;max-height:9mm;overflow:hidden}
+.tk-rut{text-align:center;font-weight:700;font-size:8.6pt;line-height:1.2}
+.tk-med{text-align:center;font-weight:700;line-height:1.1;overflow-wrap:anywhere;max-height:12mm;overflow:hidden}
+.tk-mid{display:flex;gap:2mm;align-items:center}
+.tk-ind{flex:1;text-align:center;line-height:1.15;overflow-wrap:anywhere;overflow:hidden;max-height:20mm}
+.tk-side{width:30mm;font-size:8.4pt;line-height:1.5}
+.tk-side b{font-weight:700}
+.tk-cant{font-size:14pt;font-weight:700}
+.tk-ft{display:flex;flex-direction:column}
+.tk-lote{text-align:center;font-size:10.5pt;line-height:1.1;padding-right:12mm}
+.tk-pr{text-align:right;font-size:7pt;line-height:1.2;align-self:flex-end;max-width:60mm}
+.tk-pr b{display:block;font-size:8pt;font-weight:700;overflow-wrap:anywhere}
+.tk-empty{color:#999}
 #printArea{display:none}
 @media print{
   html,body{background:#fff!important;margin:0!important;padding:0!important}
@@ -439,6 +456,7 @@ footer.foot{font-family:var(--font-sign)}
 
 <nav class="tabs" role="tablist" aria-label="Secciones">
   <button type="button" role="tab" data-tab="ind" aria-selected="true">Etiqueta</button>
+  <button type="button" role="tab" data-tab="emer" aria-selected="false">Emergencia</button>
   <button type="button" role="tab" data-tab="hoja" aria-selected="false">Hoja de horario</button>
   <button type="button" role="tab" data-tab="ajus" aria-selected="false">Ajustes</button>
 </nav>
@@ -548,6 +566,61 @@ footer.foot{font-family:var(--font-sign)}
 </div>
 </section>
 
+<!-- ================= EMERGENCIA ================= -->
+<section class="tab" id="tab-emer" hidden>
+<div class="grid2">
+ <div>
+  <div class="card">
+   <h2>Ticket de emergencia</h2>
+   <p class="sub">Para cuando AVIS no permite rebajar. Imprime el mismo ticket de dispensación en la etiqueta de 10 × 7 cm. Nada de lo que escribas se guarda: al cerrar la pestaña o tocar “Nuevo paciente” se borra.</p>
+   <h3>Paciente</h3>
+   <div class="row">
+    <label class="fld grow"><span>Nombre</span><input id="eNom" type="text" maxlength="70" autocomplete="off"></label>
+    <label class="fld" style="flex:0 1 170px"><span>RUT</span><input id="eRut" type="text" maxlength="12" autocomplete="off" placeholder="Sin puntos, con guion"></label>
+   </div>
+   <p class="small" id="eRutMsg" hidden></p>
+   <div class="row" style="margin-top:8px">
+    <label class="fld grow"><span>Prescrito por</span><input id="ePres" type="text" maxlength="60" autocomplete="off"></label>
+    <label class="fld" style="flex:0 1 170px"><span>Fecha de entrega</span><input id="eFec" type="date"></label>
+   </div>
+   <h3>Medicamento</h3>
+   <label class="fld searchbox"><span>Buscar en el arsenal</span>
+    <input id="eMed" type="text" autocomplete="off" placeholder="Ej: cloranfenicol">
+    <div class="sugs" id="eSugs" hidden></div>
+   </label>
+   <label class="fld" style="margin-top:8px"><span>Nombre en el ticket</span><input id="eMedTxt" type="text" maxlength="90" autocomplete="off" placeholder="CLORAMFENICOL 1 % UNGUENTO OFTALMICO"></label>
+   <label class="fld" style="margin-top:8px"><span>Indicación</span><input id="eInd" type="text" maxlength="160" autocomplete="off" placeholder="1 aplicación cada 12 horas por 5 días"></label>
+   <div class="row" style="margin-top:8px">
+    <label class="fld" style="flex:0 1 110px"><span>Cantidad</span><input id="eCant" type="text" inputmode="decimal" maxlength="8" value="1"></label>
+    <label class="fld grow"><span>Vía</span><input id="eVia" type="text" maxlength="30" list="eVias" autocomplete="off"></label>
+    <datalist id="eVias"><option>Oral</option><option>Sublingual</option><option>Tópico</option><option>Tópico ocular</option><option>Ótica</option><option>Nasal</option><option>Inhalatoria</option><option>Rectal</option><option>Vaginal</option><option>Transdérmica</option><option>Subcutánea</option><option>Intramuscular</option><option>Endovenosa</option></datalist>
+   </div>
+   <div class="row" style="margin-top:8px">
+    <label class="fld grow"><span>Lote</span><input id="eLote" type="text" maxlength="20" autocomplete="off"></label>
+    <label class="fld" style="flex:0 1 170px"><span>Vencimiento</span><input id="eVto" type="date"></label>
+   </div>
+  </div>
+ </div>
+ <div>
+  <div class="card">
+   <h2>Vista previa</h2>
+   <div class="prevwrap" id="ePrevWrap"><div class="prev" id="ePrev"></div></div>
+   <div class="row">
+    <label class="fld" style="flex:0 1 90px"><span>Copias</span><input id="eCop" type="number" min="1" max="20" value="1" inputmode="numeric"></label>
+    <label class="chip" style="cursor:pointer;align-self:flex-end"><input type="checkbox" id="ePict"> Imprimir también la etiqueta con pictogramas</label>
+   </div>
+   <p class="small" id="ePictMsg" hidden></p>
+   <p class="small">Usa la impresora elegida en la pestaña Etiqueta.</p>
+   <div class="actions">
+    <button class="btn sign" type="button" id="ePrint">Imprimir ticket</button>
+    <button class="btn ghost" type="button" id="eNext">Otro medicamento</button>
+    <button class="btn warn" type="button" id="eNew">Nuevo paciente</button>
+   </div>
+  </div>
+ </div>
+</div>
+</section>
+
 <!-- ================= HOJA ================= -->
 <section class="tab" id="tab-hoja" hidden>
  <div class="card">
@@ -574,6 +647,14 @@ footer.foot{font-family:var(--font-sign)}
 
 <!-- ================= AJUSTES ================= -->
 <section class="tab" id="tab-ajus" hidden>
+ <div class="card">
+  <h2>Establecimiento</h2>
+  <p class="sub">Encabezado del ticket de emergencia.</p>
+  <div class="row">
+   <label class="fld grow"><span>Nombre</span><input id="cEst" type="text" maxlength="60"></label>
+   <label class="fld grow"><span>Dirección y teléfono</span><input id="cDir" type="text" maxlength="80"></label>
+  </div>
+ </div>
  <div class="card">
   <h2>Código QR</h2>
   <p class="sub">Opcional. Sale en la etiqueta (si lo activas allá) y en la hoja.</p>
@@ -615,6 +696,7 @@ footer.foot{font-family:var(--font-sign)}
    <b>Pautas guardadas</b><span>Solo guardan la indicación (medicamento, dosis, cuidados). Se exportan a un archivo para llevarlas a otro PC.</span>
    <b>Voz</b><span>Solo en el visor que abre el código QR: el botón “Escuchar” lee la indicación con la voz del teléfono, si el teléfono tiene voz para ese idioma.</span>
    <b>Pictogramas</b><span>Dibujos propios en trazo negro, pensados para impresión térmica. Siguen los mismos momentos del calendario del Compendio: mañana, mediodía, tarde, noche y comida.</span>
+   <b>Ticket de emergencia</b><span>Copia el formato del ticket de dispensación de AVIS en la etiqueta de 10 × 7 cm, para cuando el sistema no permite rebajar. Los datos del paciente solo existen mientras está abierta la pestaña; no se guardan ni se envían. Revisa el dígito verificador del RUT.</span>
    <b>Kreyòl</b><span>Frases fijas armadas por la herramienta, no traducción automática: se validan una vez con un hablante nativo. La nota libre no se traduce.</span>
   </div>
  </div>
@@ -622,7 +704,7 @@ footer.foot{font-family:var(--font-sign)}
 
 
 
-<footer class="foot">Pingüino Pictogramas · Ecosistema Pingüino APS · Q.F. Felipe Carrasco Cisterna · v2.1.0</footer>
+<footer class="foot">Pingüino Pictogramas · Ecosistema Pingüino APS · Q.F. Felipe Carrasco Cisterna · v2.2.0</footer>
 </div>
 
 <div id="show" hidden role="dialog" aria-modal="true" aria-label="Pantalla para el paciente">
@@ -649,7 +731,7 @@ footer.foot{font-family:var(--font-sign)}
 (function(){
 'use strict';
 var CAT=/*__CATALOG__*/null;
-var VERSION='2.1.0';
+var VERSION='2.2.0';
 var $=function(id){return document.getElementById(id);};
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
@@ -1878,6 +1960,96 @@ function readVisor(){
 }
 
 /* =====================================================================
+   TICKET DE EMERGENCIA (mismo formato que AVIS). No se guarda nada del paciente.
+   ===================================================================== */
+var EST_DEF={est:'CENTRO DE SALUD FAMILIAR LIMACHE VIEJO',dir:'CALLE ANDRÉS BELLO 511, LIMACHE, 332294900'};
+function fmtFecha(iso){if(!iso)return '';var p=iso.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
+function rutLimpio(r){return String(r||'').toUpperCase().replace(/[^0-9K]/g,'');}
+function rutDV(cuerpo){var s=0,m=2;for(var i=cuerpo.length-1;i>=0;i--){s+=(+cuerpo[i])*m;m=m===7?2:m+1;}var d=11-s%11;return d===11?'0':d===10?'K':String(d);}
+function rutFormato(r){var c=rutLimpio(r);if(c.length<2)return String(r||'').trim();return c.slice(0,-1)+'-'+c.slice(-1);}
+function rutValido(r){var c=rutLimpio(r);if(c.length<2||!/^\d+$/.test(c.slice(0,-1)))return false;return rutDV(c.slice(0,-1))===c.slice(-1);}
+function cantFmt(v){var n=parseFloat(String(v||'').replace(',','.'));return isFinite(n)?n.toFixed(2):String(v||'');}
+var VIA_BY_FORM={comp:'Oral',caps:'Oral',jarabe:'Oral',gotas:'Oral',sobre:'Oral',colirio:'Tópico ocular',otico:'Ótica',nasal:'Nasal',inhal:'Inhalatoria',crema:'Tópico',supos:'Rectal',parche:'Transdérmica',insulina:'Subcutánea',iny:'Intramuscular'};
+var EM={forma:'comp',catId:''};
+function emVal(id){return $(id).value.trim();}
+function ticketHTML(){
+  var est=CFG.est||EST_DEF.est,dir=CFG.dir||EST_DEF.dir;
+  var nom=emVal('eNom').toUpperCase(),rut=rutFormato(emVal('eRut')),med=emVal('eMedTxt').toUpperCase(),ind=emVal('eInd');
+  var ph=function(t,ph){return t?esc(t):'<span class="tk-empty">'+ph+'</span>';};
+  var lote=emVal('eLote'),vto=fmtFecha($('eVto').value);
+  return '<div class="lbl tk"><div class="tk-fr">'+
+    '<div><div class="tk-hd"><span>'+esc(est)+'</span><span>Fec. entrega:'+esc(fmtFecha($('eFec').value))+'</span></div>'+
+    '<div class="tk-ad">'+esc(dir)+'</div></div>'+
+    '<div><div class="tk-pac">'+ph(nom,'NOMBRE DEL PACIENTE')+'</div>'+
+    '<div class="tk-rut">'+ph(rut,'RUT')+'</div></div>'+
+    '<div class="tk-med" style="font-size:'+fitLines(med||'MEDICAMENTO',93,12,15,8,true,1.1)+'pt">'+ph(med,'MEDICAMENTO')+'</div>'+
+    '<div class="tk-mid"><div class="tk-ind" style="font-size:'+fitLines(ind||'Indicación',60,19,14,7,false,1.15)+'pt">'+ph(ind,'Indicación')+'</div>'+
+      '<div class="tk-side"><div><b>Cant:</b> <span class="tk-cant">'+esc(cantFmt(emVal('eCant')))+'</span></div><div><b>Vía:</b> '+esc(emVal('eVia'))+'</div></div></div>'+
+    '<div class="tk-ft"><div class="tk-lote">'+(lote||vto?'LOTE: '+esc(lote)+' VTO: '+esc(vto):'')+'</div>'+
+      '<div class="tk-pr">Prescrito por:<b>'+esc(emVal('ePres').toUpperCase())+'</b></div></div>'+
+  '</div></div>';
+}
+function fitTicket(root){
+  root.querySelectorAll('.tk-med,.tk-ind,.tk-pac').forEach(function(el){
+    var pt=parseFloat(el.style.fontSize)||parseFloat(getComputedStyle(el).fontSize)*72/96,g=0;
+    while((el.scrollHeight>el.clientHeight+1||el.scrollWidth>el.clientWidth+1)&&pt>6&&g++<60){pt-=0.25;el.style.fontSize=pt+'pt';}
+  });
+}
+/* indicación del ticket → etiqueta con pictogramas */
+function emItem(){
+  var it=newItem(),r=parseRx(emVal('eInd'));
+  it.nombre=emVal('eMedTxt');it.forma=EM.forma;it.catId=EM.catId;
+  if(!r.ok)return null;
+  it.esquema=r.esquema||'dia';Object.keys(r.dose).forEach(function(k){it.dose[k]=r.dose[k];});Object.keys(r.hora).forEach(function(k){it.hora[k]=r.hora[k];});
+  if(r.forma&&!EM.catId)it.forma=r.forma;
+  it.dur=r.dur;it.durN=r.durN;it.food=r.food;it.warns=r.warns.slice();
+  var f=FBY[it.forma];if(f&&f.via&&it.warns.indexOf(f.via)<0)it.warns.push(f.via);
+  return it;
+}
+function renderTicket(){
+  $('ePrev').innerHTML=ticketHTML();fitTicket($('ePrev'));scalePrev('ePrevWrap','ePrev',100,70);
+  var rv=emVal('eRut'),m=$('eRutMsg');
+  if(rv&&!rutValido(rv)){m.textContent='El dígito verificador del RUT no coincide. Revísalo.';m.hidden=false;}else m.hidden=true;
+  var pm=$('ePictMsg');
+  if($('ePict').checked){var it=emItem();pm.textContent=it?'Etiqueta con pictogramas: '+shortLine(it,'es'):'La indicación no se pudo leer: la etiqueta con pictogramas no se imprimirá.';pm.hidden=false;}else pm.hidden=true;
+}
+function emClearMed(){['eMed','eMedTxt','eInd','eVia','eLote'].forEach(function(id){$(id).value='';});$('eCant').value='1';$('eVto').value='';$('ePict').checked=false;EM={forma:'comp',catId:''};}
+function emToday(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function bindEmer(){
+  $('cEst').value=CFG.est||EST_DEF.est;$('cDir').value=CFG.dir||EST_DEF.dir;
+  $('cEst').addEventListener('input',function(){CFG.est=this.value.trim();saveCfg();});
+  $('cDir').addEventListener('input',function(){CFG.dir=this.value.trim();saveCfg();});
+  $('eFec').value=emToday();
+  ['eNom','eRut','ePres','eFec','eMedTxt','eInd','eCant','eVia','eLote','eVto','ePict'].forEach(function(id){$(id).addEventListener('input',renderTicket);$(id).addEventListener('change',renderTicket);});
+  $('eRut').addEventListener('blur',function(){if(this.value.trim())this.value=rutFormato(this.value);renderTicket();});
+  var box=$('eSugs'),hits=[];
+  $('eMed').addEventListener('input',function(){
+    hits=searchMeds(this.value).filter(function(h){return h.t==='a';});
+    if(!hits.length){box.hidden=true;return;}
+    box.innerHTML=hits.map(function(h,i){return '<button type="button" data-i="'+i+'"><span><b>'+esc(h.a.n)+'</b> '+esc(h.a.d)+' · '+esc(h.a.ff)+'</span></button>';}).join('');box.hidden=false;
+  });
+  $('eMed').addEventListener('blur',function(){setTimeout(function(){box.hidden=true;},180);});
+  box.addEventListener('mousedown',function(e){var b=e.target.closest('button');if(!b)return;e.preventDefault();var a=hits[+b.dataset.i].a;
+    $('eMedTxt').value=(a.n+' '+a.d+' '+a.ff).toUpperCase().replace(/\s+/g,' ');
+    EM.forma=mapForm(a.ff+' '+a.n);EM.catId=a.ci>=0?MEDS[a.ci].i:'';
+    if(!emVal('eVia'))$('eVia').value=VIA_BY_FORM[EM.forma]||'';
+    $('eMed').value='';box.hidden=true;renderTicket();$('eInd').focus();});
+  $('ePrint').onclick=function(){
+    if(!emVal('eNom')||!emVal('eMedTxt')||!emVal('eInd')){alert('Completa al menos el nombre del paciente, el medicamento y la indicación.');return;}
+    var imp=$('fImp').value,n=Math.max(1,Math.min(20,parseInt($('eCop').value,10)||1)),h='',one=wrapZebra(ticketHTML(),imp),k;
+    for(k=0;k<n;k++)h+=one;
+    var it=$('ePict').checked?emItem():null;
+    if(it){var lp=wrapZebra(labelHTML(it,S.lang),imp);for(k=0;k<n;k++)h+=lp;}
+    setPage(imp==='hoja'?'size:100mm 70mm;margin:0':'size:70mm 100mm;margin:0');
+    printArea.innerHTML=h;printArea.style.display='block';fitTicket(printArea);fitBoxes(printArea);printArea.style.display='';
+    window.print();
+  };
+  $('eNext').onclick=function(){emClearMed();renderTicket();$('eMed').focus();};
+  $('eNew').onclick=function(){if(!confirm('¿Borrar los datos del paciente y empezar de nuevo?'))return;['eNom','eRut','ePres'].forEach(function(id){$(id).value='';});emClearMed();$('eFec').value=emToday();renderTicket();$('eNom').focus();};
+  renderTicket();
+}
+
+/* =====================================================================
    PESTAÑAS, IDIOMA, ARRANQUE
    ===================================================================== */
 function setTab(t){
@@ -1885,6 +2057,7 @@ function setTab(t){
   document.querySelectorAll('section.tab').forEach(function(s){s.hidden=s.id!=='tab-'+t;});
   if(t==='hoja')renderHoja();
   if(t==='ajus')phRows();
+  if(t==='emer')renderTicket();
   if(t==='ind')renderPreview();
   CFG.tab=t;saveCfg();
 }
@@ -1897,7 +2070,7 @@ function setLang(pl,dual){
 function refreshAll(){renderForm();renderList();if(!$('tab-hoja').hidden)renderHoja();}
 function init(){
   $('dayline').innerHTML=FR_DIA.map(function(fr){return '<span class="dl-i">'+icon(fr.ic)+'<span>'+esc(T(fr.id,'es',true))+'</span></span>';}).join('<span class="dl-l"></span>');
-  bindForm();bindList();bindHoja();bindShow();bindFras();
+  bindForm();bindList();bindHoja();bindShow();bindFras();bindEmer();
   document.querySelector('nav.tabs').addEventListener('click',function(e){var b=e.target.closest('[data-tab]');if(b)setTab(b.dataset.tab);});
   $('langSeg').addEventListener('click',function(e){var b=e.target.closest('[data-lang]');if(!b)return;var l=b.dataset.lang;setLang(l==='es'?'es':'ht',l==='bi');});
   if(CFG.imp&&/^(z-izq|z-der|hoja)$/.test(CFG.imp))$('fImp').value=CFG.imp;
@@ -1912,12 +2085,12 @@ function init(){
   var VIS=readVisor();
   if(VIS){S.pl=VIS.l==='ht'?'ht':'es';S.dual=VIS.b;}
   setLang(S.pl,S.dual);
-  setTab(/^(ind|hoja|ajus)$/.test(CFG.tab)?CFG.tab:'ind');
-  window.addEventListener('resize',function(){renderPreview();if(!$('tab-hoja').hidden)renderHoja();});
+  setTab(/^(ind|emer|hoja|ajus)$/.test(CFG.tab)?CFG.tab:'ind');
+  window.addEventListener('resize',function(){renderPreview();if(!$('tab-emer').hidden)renderTicket();if(!$('tab-hoja').hidden)renderHoja();});
   try{if(window.speechSynthesis)speechSynthesis.getVoices();}catch(e){}
   if(VIS){window.__VIS=true;$('app').hidden=true;$('shClose').hidden=true;$('shFull').hidden=true;openShowItems(VIS.items);document.title='Mis medicamentos';}
 }
-window.__PICT={FRS:FRS,frsOf:frsOf,fixItem:fixItem,MARKS:MARKS,fitBoxes:fitBoxes,activeFr:activeFr,packLink:packLink,unpackLink:unpackLink,readVisor:readVisor,QR:QR,parseRx:parseRx,qrContent:qrContent,packItem:packItem,unpackItem:unpackItem,b64u:b64u,CFG:CFG,ARS:ARS,S:S,labelHTML:labelHTML,sheetHTML:sheetHTML,shortLine:shortLine,longLines:longLines,speechText:speechText,doseSVG:doseSVG,pickMed:pickMed,searchMeds:searchMeds,T:T,newItem:newItem,mapForm:mapForm,buildSugs:buildSugs,P0:P0};
+window.__PICT={rutValido:rutValido,ticketHTML:ticketHTML,emItem:emItem,FRS:FRS,frsOf:frsOf,fixItem:fixItem,MARKS:MARKS,fitBoxes:fitBoxes,activeFr:activeFr,packLink:packLink,unpackLink:unpackLink,readVisor:readVisor,QR:QR,parseRx:parseRx,qrContent:qrContent,packItem:packItem,unpackItem:unpackItem,b64u:b64u,CFG:CFG,ARS:ARS,S:S,labelHTML:labelHTML,sheetHTML:sheetHTML,shortLine:shortLine,longLines:longLines,speechText:speechText,doseSVG:doseSVG,pickMed:pickMed,searchMeds:searchMeds,T:T,newItem:newItem,mapForm:mapForm,buildSugs:buildSugs,P0:P0};
 init();
 /* ---- instalable (PWA): solo cuando se abre desde la web publicada ---- */
 (function(){

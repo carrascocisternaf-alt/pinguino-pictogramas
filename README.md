@@ -14,6 +14,7 @@ Parte del Ecosistema Pingüino APS · CESFAM Limache Viejo, DESAM Limache.
 - Busca en el arsenal del CESFAM y rellena nombre, concentración y forma tal como vienen.
 - Lee la indicación de la receta (`1 comp c/12 h por 30 días con las comidas`, `½-0-1`, `al desayuno y a la cena`…).
 - Etiqueta en blanco y negro con solo los horarios que lleva el medicamento.
+- Ticket de emergencia con el formato de AVIS, para cuando el sistema no permite rebajar.
 - Hoja de horario para llevar, con figuras (estrella, triángulo…) que relacionan cada caja con su fila.
 - Pautas guardadas y código QR opcional.
 

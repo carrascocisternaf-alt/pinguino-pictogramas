@@ -6,11 +6,11 @@
 
 | Se guarda (localStorage) | Qué contiene |
 |---|---|
-| `pict_cfg_v1` | preferencias: idioma, impresora, papel, opciones de QR |
+| `pict_cfg_v1` | preferencias: idioma, impresora, papel, opciones de QR, nombre y dirección del establecimiento |
 | `pict_textos_v1` | frases en kreyòl corregidas por el equipo |
 | `pict_pautas_v1` | pautas guardadas: medicamento + dosis + cuidados, sin paciente |
 
-No se guarda: nombre, RUT, la lista de medicamentos de una entrega ni el nombre escrito en la hoja. Todo eso vive solo en la pestaña abierta y se borra al cerrarla o con *Nuevo paciente*. La prueba automática `tests/smoke.py` falla si aparece cualquier otra clave.
+No se guarda: nombre, RUT, prescriptor ni ningún dato del ticket de emergencia, la lista de medicamentos de una entrega ni el nombre escrito en la hoja. Todo eso vive solo en la pestaña abierta y se borra al cerrarla o con *Nuevo paciente*. La prueba automática `tests/smoke.py` falla si aparece cualquier otra clave.
 
 ## Código QR
 

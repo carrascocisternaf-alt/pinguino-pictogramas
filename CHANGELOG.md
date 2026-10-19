@@ -1,5 +1,9 @@
 # Cambios
 
+## 2.2.0 — 2026-10-19
+- Pestaña **Emergencia**: ticket de dispensación con el formato de AVIS en la etiqueta de 10 × 7 cm, para cuando el sistema no permite rebajar. Valida el RUT, toma el medicamento del arsenal, sugiere la vía y opcionalmente imprime también la etiqueta con pictogramas. No guarda datos del paciente.
+- Ajustes: nombre y dirección del establecimiento para el encabezado del ticket.
+
 ## 2.1.0 — 2026-10-19
 - Instalable como aplicación (PWA) y funciona sin conexión.
 - El QR en modo enlace usa por defecto la dirección donde está publicada.

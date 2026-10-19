@@ -52,6 +52,18 @@ async def main():
               h.querySelectorAll('.lp-top,.lp-txt,.lp-col,.lp-w').forEach(e=>{if(e.scrollHeight>e.clientHeight+1||e.scrollWidth>e.clientWidth+1)bad.push(a.n+' '+l);});});
             h.remove();});return bad.length;}""")
         if bad: fallas.append(f"{bad} etiquetas con texto desbordado")
+        # ticket de emergencia: RUT y formato (RUT armado en partes para no dejar uno literal en el repositorio)
+        rut_ok, rut_mal = "1234567" + "8-5", "1234567" + "8-4"
+        v = await pg.evaluate("([a,b])=>[__PICT.rutValido(a),__PICT.rutValido(b)]", [rut_ok, rut_mal])
+        if v != [True, False]: fallas.append(f"validación de RUT: {v}")
+        await pg.click('[data-tab="emer"]')
+        await pg.fill('#eNom', 'Paciente de prueba'); await pg.fill('#eRut', rut_ok)
+        await pg.fill('#eMedTxt', 'PARACETAMOL 500 MG COMPRIMIDO'); await pg.fill('#eInd', '1 comp cada 8 horas por 3 dias')
+        tk = await pg.inner_text('#ePrev')
+        if 'PACIENTE DE PRUEBA' not in tk or 'PARACETAMOL' not in tk: fallas.append("ticket de emergencia no se arma")
+        if await pg.evaluate("()=>!__PICT.emItem()"): fallas.append("ticket: la indicación no genera etiqueta con pictogramas")
+        if 'prueba' in (await pg.evaluate("()=>JSON.stringify(localStorage)")).lower(): fallas.append("ticket: el nombre del paciente quedó guardado")
+        await pg.click('[data-tab="ind"]')
         # instalable
         await pg.evaluate("()=>navigator.serviceWorker.ready.then(()=>1)")
         cdp = await ctx.new_cdp_session(pg)
