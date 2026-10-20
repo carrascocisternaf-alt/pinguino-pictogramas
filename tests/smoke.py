@@ -64,6 +64,13 @@ async def main():
         if await pg.evaluate("()=>!__PICT.emItem()"): fallas.append("ticket: la indicación no genera etiqueta con pictogramas")
         if 'prueba' in (await pg.evaluate("()=>JSON.stringify(localStorage)")).lower(): fallas.append("ticket: el nombre del paciente quedó guardado")
         await pg.click('[data-tab="ind"]')
+        # lotes: con un inventario de prueba elige el artículo correcto y la dosis correcta
+        m = await pg.evaluate("""()=>{__PICT.setLotes({meta:{cargado:'2026-10-20T11:00:00Z'},items:[
+          {n:'METFORMINA 850 MG COMPRIMIDO',lots:[['2027-01-31','A1',10,'']]},
+          {n:'METFORMINA 1000 MG XR COMPRIMIDO',lots:[['2027-02-28','B1',5,'']]}]});
+          return [__PICT.lotsFor('Metformina Clorhidrato','850 mg','Comprimido').map(x=>x.n),
+                  __PICT.lotsFor('Metformina Clorhidrato','1000 mg XR','Comprimido').map(x=>x.n)];}""")
+        if m != [["METFORMINA 850 MG COMPRIMIDO"], ["METFORMINA 1000 MG XR COMPRIMIDO"]]: fallas.append(f"lotes: emparejamiento {m}")
         # instalable
         await pg.evaluate("()=>navigator.serviceWorker.ready.then(()=>1)")
         cdp = await ctx.new_cdp_session(pg)
@@ -76,7 +83,7 @@ async def main():
         if await pg.evaluate("()=>__PICT.ARS.length") != n: fallas.append("no abre sin conexión")
         # no guarda la lista de pacientes en el navegador
         claves = await pg.evaluate("()=>Object.keys(localStorage)")
-        raras = [k for k in claves if k not in ("pict_cfg_v1", "pict_textos_v1", "pict_pautas_v1")]
+        raras = [k for k in claves if k not in ("pict_cfg_v1", "pict_textos_v1", "pict_pautas_v1", "pict_lotes_v1")]
         if raras: fallas.append(f"claves inesperadas en el navegador: {raras}")
         if errs: fallas.append(f"errores de JavaScript: {errs}")
         await b.close()

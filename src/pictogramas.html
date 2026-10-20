@@ -407,6 +407,18 @@ footer.foot{font-family:var(--font-sign)}
 .tk-pr{text-align:right;font-size:7pt;line-height:1.2;align-self:flex-end;max-width:60mm}
 .tk-pr b{display:block;font-size:8pt;font-weight:700;overflow-wrap:anywhere}
 .tk-empty{color:#999}
+.lotchips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
+.lotchip{display:inline-flex;flex-direction:column;align-items:flex-start;border:2px solid var(--line);background:var(--card);border-radius:6px;padding:4px 10px;cursor:pointer;font-family:var(--font-sign);line-height:1.15;color:var(--ink)}
+.lotchip b{font-size:.95rem}
+.lotchip small{font-size:.75rem;color:var(--mute);font-family:inherit}
+.lotchip.next{border-color:var(--ink)}
+.lotchip.next small::after{content:" · sigue"}
+.lotchip.venc{opacity:.55}
+.lotchip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--card)}
+.lotchip[aria-pressed="true"] small{color:var(--card)}
+.lothead{width:100%;font-size:.8rem;color:var(--mute);margin-top:2px}
+.lp-lot{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Arial Black",Arial,Helvetica,sans-serif;font-weight:900;line-height:1.1;text-align:center;overflow:hidden;padding:0 1mm}
+.lp-lot span{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:.62em}
 #printArea{display:none}
 @media print{
   html,body{background:#fff!important;margin:0!important;padding:0!important}
@@ -480,6 +492,12 @@ footer.foot{font-family:var(--font-sign)}
     <label class="fld" style="flex:0 1 240px"><span>Pictograma de dosis</span><select id="fForma"></select></label>
    </div>
    <div class="sugbox" id="sugBox" hidden></div>
+   <h3>Lote y vencimiento <span class="small" id="lotStat"></span></h3>
+   <div class="lotchips" id="lotChips"></div>
+   <div class="row">
+    <label class="fld grow"><span>Lote</span><input id="fLote" type="text" maxlength="24" autocomplete="off" placeholder="Opcional"></label>
+    <label class="fld" style="flex:0 1 170px"><span>Vence</span><input id="fVto" type="month" placeholder="AAAA-MM"></label>
+   </div>
   </div>
 
   <div class="card">
@@ -588,6 +606,7 @@ footer.foot{font-family:var(--font-sign)}
     <input id="eMed" type="text" autocomplete="off" placeholder="Ej: cloranfenicol">
     <div class="sugs" id="eSugs" hidden></div>
    </label>
+   <div class="lotchips" id="eLotChips" style="margin-top:8px"></div>
    <label class="fld" style="margin-top:8px"><span>Nombre en el ticket</span><input id="eMedTxt" type="text" maxlength="90" autocomplete="off" placeholder="CLORAMFENICOL 1 % UNGUENTO OFTALMICO"></label>
    <label class="fld" style="margin-top:8px"><span>Indicación</span><input id="eInd" type="text" maxlength="160" autocomplete="off" placeholder="1 aplicación cada 12 horas por 5 días"></label>
    <div class="row" style="margin-top:8px">
@@ -648,6 +667,15 @@ footer.foot{font-family:var(--font-sign)}
 <!-- ================= AJUSTES ================= -->
 <section class="tab" id="tab-ajus" hidden>
  <div class="card">
+  <h2>Lotes</h2>
+  <p class="sub">Toma los lotes y vencimientos de la última carga de Pingüino Lotes. Solo lee el inventario; no envía nada.</p>
+  <div class="row">
+   <label class="fld grow"><span>Dirección de Lotes</span><input id="cLotes" type="url" autocomplete="off"></label>
+   <button class="btn ghost" type="button" id="bLotes" style="align-self:flex-end">Actualizar lotes</button>
+  </div>
+  <p class="small" id="cLotesStat"></p>
+ </div>
+ <div class="card">
   <h2>Establecimiento</h2>
   <p class="sub">Encabezado del ticket de emergencia.</p>
   <div class="row">
@@ -697,6 +725,7 @@ footer.foot{font-family:var(--font-sign)}
    <b>Voz</b><span>Solo en el visor que abre el código QR: el botón “Escuchar” lee la indicación con la voz del teléfono, si el teléfono tiene voz para ese idioma.</span>
    <b>Pictogramas</b><span>Dibujos propios en trazo negro, pensados para impresión térmica. Siguen los mismos momentos del calendario del Compendio: mañana, mediodía, tarde, noche y comida.</span>
    <b>Ticket de emergencia</b><span>Copia el formato del ticket de dispensación de AVIS en la etiqueta de 10 × 7 cm, para cuando el sistema no permite rebajar. Los datos del paciente solo existen mientras está abierta la pestaña; no se guardan ni se envían. Revisa el dígito verificador del RUT.</span>
+   <b>Lotes</b><span>Lee la última carga de Pingüino Lotes (lote, vencimiento y stock) para ponerlo en la etiqueta y en el ticket con un clic. Guarda una copia del inventario para usarla sin conexión; el inventario no tiene datos de pacientes.</span>
    <b>Kreyòl</b><span>Frases fijas armadas por la herramienta, no traducción automática: se validan una vez con un hablante nativo. La nota libre no se traduce.</span>
   </div>
  </div>
@@ -704,7 +733,7 @@ footer.foot{font-family:var(--font-sign)}
 
 
 
-<footer class="foot">Pingüino Pictogramas · Ecosistema Pingüino APS · Q.F. Felipe Carrasco Cisterna · v2.2.0</footer>
+<footer class="foot">Pingüino Pictogramas · Ecosistema Pingüino APS · Q.F. Felipe Carrasco Cisterna · v2.3.0</footer>
 </div>
 
 <div id="show" hidden role="dialog" aria-modal="true" aria-label="Pantalla para el paciente">
@@ -731,7 +760,7 @@ footer.foot{font-family:var(--font-sign)}
 (function(){
 'use strict';
 var CAT=/*__CATALOG__*/null;
-var VERSION='2.2.0';
+var VERSION='2.3.0';
 var $=function(id){return document.getElementById(id);};
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
@@ -1127,7 +1156,7 @@ function labelHTML(it,lang){
     var s=shortLine(it,lang,true);
     txt='<div class="lp-txt" style="font-size:'+fitLines(s,95,5.2,8.5,5,false,1.05)+'pt"><div>'+esc(s)+'</div></div>';
   }
-  return '<div class="lbl lbl-p'+(lang==='bi'?' bi':'')+'"><div class="lp-fr">'+top+'<div class="lp-grid n'+act.length+'">'+(cols||'<div class="lp-empty">Indica la cantidad en algún momento del día</div>')+'</div><div class="lp-bot">'+bot+'<div class="lp-sp"></div>'+(withQR?'<div class="lp-qr">'+qrs+'</div>':'')+dur+'</div>'+txt+'</div></div>';
+  return '<div class="lbl lbl-p'+(lang==='bi'?' bi':'')+'"><div class="lp-fr">'+top+'<div class="lp-grid n'+act.length+'">'+(cols||'<div class="lp-empty">Indica la cantidad en algún momento del día</div>')+'</div><div class="lp-bot">'+bot+(it.lote||it.vto?'<div class="lp-lot" style="font-size:'+(String(it.lote).length>10?9:11)+'pt"><div><span>L:</span> '+esc(it.lote||'—')+'</div><div><span>V:</span> '+esc(mmYYYY(it.vto))+'</div></div>':'<div class="lp-sp"></div>')+(withQR?'<div class="lp-qr">'+qrs+'</div>':'')+dur+'</div>'+txt+'</div></div>';
 }
 /* ajuste final medido en pantalla: achica la letra hasta que el texto quepa */
 function fitBoxes(root){
@@ -1201,7 +1230,7 @@ function sheetHTML(items,o){
 /* =====================================================================
    ESTADO
    ===================================================================== */
-function newItem(){return {marca:-1,esquema:'dia',nombre:'',conc:'',ff:'',forma:'comp',dose:emptySlots(),hora:emptySlots(),food:'',warns:[],dur:'',durN:'',nota:'',catId:'',sugs:[]};}
+function newItem(){return {lote:'',vto:'',marca:-1,esquema:'dia',nombre:'',conc:'',ff:'',forma:'comp',dose:emptySlots(),hora:emptySlots(),food:'',warns:[],dur:'',durN:'',nota:'',catId:'',sugs:[]};}
 function clone(o){return JSON.parse(JSON.stringify(o));}
 var S={pl:CFG.pl==='ht'||CFG.lang==='bi'||CFG.lang==='ht'?'ht':'es',dual:CFG.dual!=null?!!CFG.dual:CFG.lang==='bi',lang:'es',cur:newItem(),list:[],edit:-1};
 
@@ -1287,6 +1316,7 @@ function renderForm(){
     return '<button type="button" class="chip" data-warn="'+w+'" aria-pressed="'+(it.warns.indexOf(w)>=0)+'">'+icon(w)+esc(T('w_'+w,'es',true))+'</button>';
   }).join('');
   renderSugBox();
+  $('fLote').value=it.lote||'';$('fVto').value=it.vto?String(it.vto).slice(0,7):'';renderLotChips();
   renderPreview();
 }
 function renderSugBox(){
@@ -1386,7 +1416,7 @@ function pickMed(h){
   var it=S.cur,m=null;
   $('sugs').hidden=true;
   it.sugs=[];
-  it.food='';it.warns=[];
+  it.food='';it.warns=[];it.lote='';it.vto='';
   if(h.t==='a'){
     var a=h.a;
     it.nombre=a.n;it.conc=a.d;it.ff=a.ff;it.catId=a.ci>=0?MEDS[a.ci].i:'';
@@ -1759,7 +1789,7 @@ function applyRx(){
 var PAUTAS=LS.get('pict_pautas_v1',[])||[];
 function savePautas(){LS.set('pict_pautas_v1',PAUTAS);}
 function fixItem(it){it.dose=Object.assign(emptySlots(),it.dose||{});it.hora=Object.assign(emptySlots(),it.hora||{});if(it.esquema!=='comidas')it.esquema='dia';return it;}
-function cleanItem(it){var c=clone(it);delete c.sugs;delete c.marca;return c;}
+function cleanItem(it){var c=clone(it);delete c.sugs;delete c.marca;delete c.lote;delete c.vto;return c;}
 function renderPautas(){
   var q=norm($('ptQ').value),el=$('ptList');
   var list=PAUTAS.map(function(p,i){return [p,i];}).filter(function(x){return !q||norm(x[0].t+' '+x[0].it.nombre).indexOf(q)>=0;});
@@ -1960,6 +1990,94 @@ function readVisor(){
 }
 
 /* =====================================================================
+   LOTES (lee el inventario publicado por Pingüino Lotes; no envía nada)
+   ===================================================================== */
+var LOTES_DEF='https://lotes-bodega-botiquin-cesfam-limache.netlify.app/api/inventario';
+var LOT={data:LS.get('pict_lotes_v1',null),online:false,err:''};
+function lotesUrl(){var u=(CFG.lotesUrl||'').trim();if(!u)return LOTES_DEF;u=u.replace(/\/+$/,'');return /\/api\/inventario$/.test(u)?u:u+'/api/inventario';}
+function mmYYYY(iso){if(!iso)return '—';var m=String(iso).match(/^(\d{4})-(\d{2})/);return m?m[2]+'/'+m[1]:String(iso);}
+function setLotes(d){if(d&&d.meta&&Array.isArray(d.items)){d.items.forEach(function(x){x._n=norm(x.n);});LOT.data=d;}}
+setLotes(LOT.data);
+function loadLotes(manual){
+  var ctl=window.AbortController?new AbortController():null,tm=setTimeout(function(){if(ctl)ctl.abort();},9000);
+  return fetch(lotesUrl(),{cache:'no-store',signal:ctl?ctl.signal:undefined}).then(function(r){
+    if(!r.ok)throw new Error('HTTP '+r.status);return r.json();
+  }).then(function(d){
+    clearTimeout(tm);if(!d||!d.meta||!Array.isArray(d.items))throw new Error('formato');
+    var slim={meta:d.meta,items:d.items.map(function(x){return {c:x.c,n:x.n,lots:x.lots};})};
+    LS.set('pict_lotes_v1',slim);setLotes(slim);LOT.online=true;LOT.err='';
+    if(manual)toast('Lotes actualizados.');
+  }).catch(function(e){clearTimeout(tm);LOT.online=false;LOT.err=String(e&&e.message||e);if(manual)toast(LOT.data?'Sin conexión con Lotes: se usa la última copia.':'No se pudo leer Lotes.');})
+  .then(function(){renderLotStat();renderLotChips();if(!$('tab-emer').hidden)renderELotChips();});
+}
+function fmtDT(iso){try{var d=new Date(iso);return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}catch(e){return '';}}
+function renderLotStat(){
+  var m=LOT.data&&LOT.data.meta,t;
+  if(!m)t=LOT.err?'Sin conexión con Lotes y sin copia guardada.':'Buscando inventario en Lotes…';
+  else t='Inventario cargado en Lotes el '+fmtDT(m.cargado)+(LOT.online?'':' (copia guardada, sin conexión)');
+  $('lotStat').textContent=m?'· '+(LOT.online?'Lotes ':'copia de Lotes ')+fmtDT(m.cargado):'';
+  $('cLotesStat').textContent=t;
+}
+/* busca el artículo de AVIS que corresponde al medicamento del arsenal */
+function lotsFor(nombre,dosis,ff){
+  if(!LOT.data)return [];
+  var nn=norm(nombre),words=nn.replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(function(w){return w.length>=4;});
+  if(!words.length)return [];
+  var nums=(norm(dosis||'').match(/\d+(?:[.,]\d+)?/g)||[]).map(function(x){return x.replace(',','.');});
+  var fw=norm(ff||'').split(/[^a-z]+/).filter(function(w){return w.length>=4;});
+  var res=[];
+  LOT.data.items.forEach(function(x){
+    var n=x._n;if(n.indexOf(words[0])<0)return;
+    var sc=10;
+    words.slice(1).forEach(function(w){if(n.indexOf(w)>=0)sc+=2;});
+    nums.forEach(function(d){var re=new RegExp('(^|[^0-9.,])'+d.replace('.','[.,]')+'(?![0-9])');if(re.test(n))sc+=6;else sc-=3;});
+    fw.forEach(function(w){if(n.indexOf(w.slice(0,5))>=0)sc+=2;});
+    res.push([sc,x]);
+  });
+  res.sort(function(a,b){return b[0]-a[0];});
+  if(!res.length)return [];
+  var top=res[0][0];
+  return res.filter(function(r){return r[0]>=top-1;}).slice(0,3).map(function(r){return r[1];});
+}
+function hoyISO(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function lotChipsHTML(arts,selLote,attr){
+  if(!arts.length)return '';
+  var hoy=hoyISO();
+  return arts.map(function(x){
+    var lots=x.lots.filter(function(l){return (l[2]==null||l[2]>0);});
+    var next=lots.find(function(l){return l[0]&&l[0]>=hoy;});
+    return (arts.length>1?'<div class="lothead">'+esc(x.n)+'</div>':'')+lots.map(function(l){
+      var v=l[0]&&l[0]<hoy;
+      return '<button type="button" class="lotchip'+(l===next?' next':'')+(v?' venc':'')+'" '+attr+'="'+esc(l[1])+'|'+esc(l[0]||'')+'" aria-pressed="'+(selLote===l[1])+'" title="'+esc(x.n)+'"><b>'+esc(l[1]||'S/L')+'</b><small>vence '+esc(mmYYYY(l[0]))+(l[2]!=null?' · '+l[2]+' u.':'')+(v?' · VENCIDO':'')+'</small></button>';
+    }).join('');
+  }).join('');
+}
+function renderLotChips(){
+  var it=S.cur,el=$('lotChips');if(!el)return;
+  if(!it.nombre){el.innerHTML='';return;}
+  var arts=lotsFor(it.nombre,it.conc,it.ff);
+  el.innerHTML=arts.length?lotChipsHTML(arts,it.lote,'data-lot'):(LOT.data?'<span class="small">No encontré este medicamento en Lotes. Escribe el lote a mano.</span>':'');
+}
+function bindLotes(){
+  $('cLotes').value=CFG.lotesUrl||'';$('cLotes').placeholder=LOTES_DEF.replace('/api/inventario','');
+  $('cLotes').addEventListener('change',function(){CFG.lotesUrl=this.value.trim();saveCfg();loadLotes(true);});
+  $('bLotes').onclick=function(){loadLotes(true);};
+  $('lotChips').addEventListener('click',function(e){var b=e.target.closest('[data-lot]');if(!b)return;var p=b.dataset.lot.split('|');
+    if(S.cur.lote===p[0]){S.cur.lote='';S.cur.vto='';}else{S.cur.lote=p[0];S.cur.vto=p[1];}
+    $('fLote').value=S.cur.lote;$('fVto').value=S.cur.vto?S.cur.vto.slice(0,7):'';renderLotChips();renderPreview();});
+  $('fLote').addEventListener('input',function(){S.cur.lote=this.value.trim();renderLotChips();renderPreview();});
+  $('fVto').addEventListener('input',function(){S.cur.vto=this.value?this.value+'-01':'';renderPreview();});
+  renderLotStat();
+  if(location.protocol==='https:'||location.protocol==='http:'||location.protocol==='file:')loadLotes(false);
+}
+function renderELotChips(){
+  var el=$('eLotChips');if(!el)return;var t=emVal('eMedTxt');
+  if(!EM.lotName){el.innerHTML='';return;}
+  var arts=lotsFor(EM.lotName,EM.lotDose,EM.lotFF);
+  el.innerHTML=arts.length?'<div class="lothead">Lotes en Lotes · toca uno para llenarlo</div>'+lotChipsHTML(arts,emVal('eLote'),'data-elot'):'';
+}
+
+/* =====================================================================
    TICKET DE EMERGENCIA (mismo formato que AVIS). No se guarda nada del paciente.
    ===================================================================== */
 var EST_DEF={est:'CENTRO DE SALUD FAMILIAR LIMACHE VIEJO',dir:'CALLE ANDRÉS BELLO 511, LIMACHE, 332294900'};
@@ -2013,7 +2131,7 @@ function renderTicket(){
   var pm=$('ePictMsg');
   if($('ePict').checked){var it=emItem();pm.textContent=it?'Etiqueta con pictogramas: '+shortLine(it,'es'):'La indicación no se pudo leer: la etiqueta con pictogramas no se imprimirá.';pm.hidden=false;}else pm.hidden=true;
 }
-function emClearMed(){['eMed','eMedTxt','eInd','eVia','eLote'].forEach(function(id){$(id).value='';});$('eCant').value='1';$('eVto').value='';$('ePict').checked=false;EM={forma:'comp',catId:''};}
+function emClearMed(){if($('eLotChips'))$('eLotChips').innerHTML='';['eMed','eMedTxt','eInd','eVia','eLote'].forEach(function(id){$(id).value='';});$('eCant').value='1';$('eVto').value='';$('ePict').checked=false;EM={forma:'comp',catId:''};}
 function emToday(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function bindEmer(){
   $('cEst').value=CFG.est||EST_DEF.est;$('cDir').value=CFG.dir||EST_DEF.dir;
@@ -2033,7 +2151,9 @@ function bindEmer(){
     $('eMedTxt').value=(a.n+' '+a.d+' '+a.ff).toUpperCase().replace(/\s+/g,' ');
     EM.forma=mapForm(a.ff+' '+a.n);EM.catId=a.ci>=0?MEDS[a.ci].i:'';
     if(!emVal('eVia'))$('eVia').value=VIA_BY_FORM[EM.forma]||'';
+    EM.lotName=a.n;EM.lotDose=a.d;EM.lotFF=a.ff;renderELotChips();
     $('eMed').value='';box.hidden=true;renderTicket();$('eInd').focus();});
+  $('eLotChips').addEventListener('click',function(e){var b=e.target.closest('[data-elot]');if(!b)return;var p=b.dataset.elot.split('|');$('eLote').value=p[0];$('eVto').value=p[1]||'';renderELotChips();renderTicket();});
   $('ePrint').onclick=function(){
     if(!emVal('eNom')||!emVal('eMedTxt')||!emVal('eInd')){alert('Completa al menos el nombre del paciente, el medicamento y la indicación.');return;}
     var imp=$('fImp').value,n=Math.max(1,Math.min(20,parseInt($('eCop').value,10)||1)),h='',one=wrapZebra(ticketHTML(),imp),k;
@@ -2057,7 +2177,7 @@ function setTab(t){
   document.querySelectorAll('section.tab').forEach(function(s){s.hidden=s.id!=='tab-'+t;});
   if(t==='hoja')renderHoja();
   if(t==='ajus')phRows();
-  if(t==='emer')renderTicket();
+  if(t==='emer'){renderTicket();renderELotChips();}
   if(t==='ind')renderPreview();
   CFG.tab=t;saveCfg();
 }
@@ -2070,7 +2190,7 @@ function setLang(pl,dual){
 function refreshAll(){renderForm();renderList();if(!$('tab-hoja').hidden)renderHoja();}
 function init(){
   $('dayline').innerHTML=FR_DIA.map(function(fr){return '<span class="dl-i">'+icon(fr.ic)+'<span>'+esc(T(fr.id,'es',true))+'</span></span>';}).join('<span class="dl-l"></span>');
-  bindForm();bindList();bindHoja();bindShow();bindFras();bindEmer();
+  bindForm();bindList();bindHoja();bindShow();bindFras();bindEmer();bindLotes();
   document.querySelector('nav.tabs').addEventListener('click',function(e){var b=e.target.closest('[data-tab]');if(b)setTab(b.dataset.tab);});
   $('langSeg').addEventListener('click',function(e){var b=e.target.closest('[data-lang]');if(!b)return;var l=b.dataset.lang;setLang(l==='es'?'es':'ht',l==='bi');});
   if(CFG.imp&&/^(z-izq|z-der|hoja)$/.test(CFG.imp))$('fImp').value=CFG.imp;
@@ -2090,7 +2210,7 @@ function init(){
   try{if(window.speechSynthesis)speechSynthesis.getVoices();}catch(e){}
   if(VIS){window.__VIS=true;$('app').hidden=true;$('shClose').hidden=true;$('shFull').hidden=true;openShowItems(VIS.items);document.title='Mis medicamentos';}
 }
-window.__PICT={rutValido:rutValido,ticketHTML:ticketHTML,emItem:emItem,FRS:FRS,frsOf:frsOf,fixItem:fixItem,MARKS:MARKS,fitBoxes:fitBoxes,activeFr:activeFr,packLink:packLink,unpackLink:unpackLink,readVisor:readVisor,QR:QR,parseRx:parseRx,qrContent:qrContent,packItem:packItem,unpackItem:unpackItem,b64u:b64u,CFG:CFG,ARS:ARS,S:S,labelHTML:labelHTML,sheetHTML:sheetHTML,shortLine:shortLine,longLines:longLines,speechText:speechText,doseSVG:doseSVG,pickMed:pickMed,searchMeds:searchMeds,T:T,newItem:newItem,mapForm:mapForm,buildSugs:buildSugs,P0:P0};
+window.__PICT={setLotes:setLotes,lotsFor:lotsFor,LOT:LOT,rutValido:rutValido,ticketHTML:ticketHTML,emItem:emItem,FRS:FRS,frsOf:frsOf,fixItem:fixItem,MARKS:MARKS,fitBoxes:fitBoxes,activeFr:activeFr,packLink:packLink,unpackLink:unpackLink,readVisor:readVisor,QR:QR,parseRx:parseRx,qrContent:qrContent,packItem:packItem,unpackItem:unpackItem,b64u:b64u,CFG:CFG,ARS:ARS,S:S,labelHTML:labelHTML,sheetHTML:sheetHTML,shortLine:shortLine,longLines:longLines,speechText:speechText,doseSVG:doseSVG,pickMed:pickMed,searchMeds:searchMeds,T:T,newItem:newItem,mapForm:mapForm,buildSugs:buildSugs,P0:P0};
 init();
 /* ---- instalable (PWA): solo cuando se abre desde la web publicada ---- */
 (function(){

@@ -1,5 +1,8 @@
 # Cambios
 
+## 2.3.0 — 2026-10-20
+- Conexión con **Pingüino Lotes**: al elegir el medicamento aparecen sus lotes de la última carga (el que sigue marcado) y con un clic quedan lote y vencimiento en la etiqueta y en el ticket de emergencia. Copia guardada para usar sin conexión.
+
 ## 2.2.0 — 2026-10-19
 - Pestaña **Emergencia**: ticket de dispensación con el formato de AVIS en la etiqueta de 10 × 7 cm, para cuando el sistema no permite rebajar. Valida el RUT, toma el medicamento del arsenal, sugiere la vía y opcionalmente imprime también la etiqueta con pictogramas. No guarda datos del paciente.
 - Ajustes: nombre y dirección del establecimiento para el encabezado del ticket.
