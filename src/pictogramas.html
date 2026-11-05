@@ -467,8 +467,8 @@ footer.foot{font-family:var(--font-sign)}
 </header>
 
 <nav class="tabs" role="tablist" aria-label="Secciones">
-  <button type="button" role="tab" data-tab="ind" aria-selected="true">Etiqueta</button>
-  <button type="button" role="tab" data-tab="emer" aria-selected="false">Emergencia</button>
+  <button type="button" role="tab" data-tab="ind" aria-selected="true">Pictograma Medicación</button>
+  <button type="button" role="tab" data-tab="emer" aria-selected="false">Etiqueta tipo AVIS</button>
   <button type="button" role="tab" data-tab="hoja" aria-selected="false">Hoja de horario</button>
   <button type="button" role="tab" data-tab="ajus" aria-selected="false">Ajustes</button>
 </nav>
@@ -589,7 +589,7 @@ footer.foot{font-family:var(--font-sign)}
 <div class="grid2">
  <div>
   <div class="card">
-   <h2>Ticket de emergencia</h2>
+   <h2>Etiqueta tipo AVIS</h2>
    <p class="sub">Para cuando AVIS no permite rebajar. Imprime el mismo ticket de dispensación en la etiqueta de 10 × 7 cm. Nada de lo que escribas se guarda: al cerrar la pestaña o tocar “Nuevo paciente” se borra.</p>
    <h3>Paciente</h3>
    <div class="row">
@@ -629,7 +629,7 @@ footer.foot{font-family:var(--font-sign)}
     <label class="chip" style="cursor:pointer;align-self:flex-end"><input type="checkbox" id="ePict"> Imprimir también la etiqueta con pictogramas</label>
    </div>
    <p class="small" id="ePictMsg" hidden></p>
-   <p class="small">Usa la impresora elegida en la pestaña Etiqueta.</p>
+   <p class="small">Usa la impresora elegida en la pestaña Pictograma Medicación.</p>
    <div class="actions">
     <button class="btn sign" type="button" id="ePrint">Imprimir ticket</button>
     <button class="btn ghost" type="button" id="eNext">Otro medicamento</button>
@@ -656,7 +656,7 @@ footer.foot{font-family:var(--font-sign)}
    <label class="chip" style="cursor:pointer"><input type="checkbox" id="hSemana"> Casillas para marcar los 7 días</label>
    <label class="chip" style="cursor:pointer"><input type="checkbox" id="hNotas" checked> Incluir notas libres</label>
   </div>
-  <div class="note" id="hEmpty">No hay medicamentos. Arma una indicación o agrega medicamentos a la lista en “Indicación y etiqueta”.</div>
+  <div class="note" id="hEmpty">No hay medicamentos. Arma una indicación o agrega medicamentos a la lista en “Pictograma Medicación”.</div>
   <p class="small" id="hCur" hidden>La lista está vacía: la hoja muestra el medicamento del formulario actual.</p>
   <div id="hList"></div>
   <div class="actions"><button class="btn sign" type="button" id="bPrintHoja">Imprimir hoja</button><button class="btn warn" type="button" id="hReset">Nuevo paciente</button></div>
@@ -677,7 +677,7 @@ footer.foot{font-family:var(--font-sign)}
  </div>
  <div class="card">
   <h2>Establecimiento</h2>
-  <p class="sub">Encabezado del ticket de emergencia.</p>
+  <p class="sub">Encabezado de la etiqueta tipo AVIS.</p>
   <div class="row">
    <label class="fld grow"><span>Nombre</span><input id="cEst" type="text" maxlength="60"></label>
    <label class="fld grow"><span>Dirección y teléfono</span><input id="cDir" type="text" maxlength="80"></label>
@@ -724,7 +724,7 @@ footer.foot{font-family:var(--font-sign)}
    <b>Pautas guardadas</b><span>Solo guardan la indicación (medicamento, dosis, cuidados). Se exportan a un archivo para llevarlas a otro PC.</span>
    <b>Voz</b><span>Solo en el visor que abre el código QR: el botón “Escuchar” lee la indicación con la voz del teléfono, si el teléfono tiene voz para ese idioma.</span>
    <b>Pictogramas</b><span>Dibujos propios en trazo negro, pensados para impresión térmica. Siguen los mismos momentos del calendario del Compendio: mañana, mediodía, tarde, noche y comida.</span>
-   <b>Ticket de emergencia</b><span>Copia el formato del ticket de dispensación de AVIS en la etiqueta de 10 × 7 cm, para cuando el sistema no permite rebajar. Los datos del paciente solo existen mientras está abierta la pestaña; no se guardan ni se envían. Revisa el dígito verificador del RUT.</span>
+   <b>Etiqueta tipo AVIS</b><span>Copia el formato del ticket de dispensación de AVIS en la etiqueta de 10 × 7 cm, para cuando el sistema no permite rebajar. Los datos del paciente solo existen mientras está abierta la pestaña; no se guardan ni se envían. Revisa el dígito verificador del RUT.</span>
    <b>Lotes</b><span>Lee la última carga de Pingüino Lotes (lote, vencimiento y stock) para ponerlo en la etiqueta y en el ticket con un clic. Guarda una copia del inventario para usarla sin conexión; el inventario no tiene datos de pacientes.</span>
    <b>Kreyòl</b><span>Frases fijas armadas por la herramienta, no traducción automática: se validan una vez con un hablante nativo. La nota libre no se traduce.</span>
   </div>
@@ -733,7 +733,7 @@ footer.foot{font-family:var(--font-sign)}
 
 
 
-<footer class="foot">Pingüino Pictogramas · Ecosistema Pingüino APS · Q.F. Felipe Carrasco Cisterna · v2.3.0</footer>
+<footer class="foot">Pingüino Pictogramas · Ecosistema Pingüino APS · Q.F. Felipe Carrasco Cisterna · v2.3.1</footer>
 </div>
 
 <div id="show" hidden role="dialog" aria-modal="true" aria-label="Pantalla para el paciente">
@@ -760,7 +760,7 @@ footer.foot{font-family:var(--font-sign)}
 (function(){
 'use strict';
 var CAT=/*__CATALOG__*/null;
-var VERSION='2.3.0';
+var VERSION='2.3.1';
 var $=function(id){return document.getElementById(id);};
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}

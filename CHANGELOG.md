@@ -1,5 +1,8 @@
 # Cambios
 
+## 2.3.1 — 2026-11-05
+- Pestañas renombradas: **Etiqueta** → **Pictograma Medicación** y **Emergencia** → **Etiqueta tipo AVIS**.
+
 ## 2.3.0 — 2026-10-20
 - Conexión con **Pingüino Lotes**: al elegir el medicamento aparecen sus lotes de la última carga (el que sigue marcado) y con un clic quedan lote y vencimiento en la etiqueta y en el ticket de emergencia. Copia guardada para usar sin conexión.
 
