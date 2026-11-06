@@ -1,17 +1,27 @@
 PINGÜINO PICTOGRAMAS - INSTALACIÓN DESDE PENDRIVE
 =================================================
 
-1. Copia esta carpeta completa al computador (o ábrela desde el pendrive).
+1. Abre esta carpeta desde el pendrive (o cópiala al computador).
 2. Doble clic en "Instalar Pictogramas".
-3. Listo: en el Escritorio y en el menú Inicio aparece el ícono "Pictogramas".
+3. Cuando pregunte "¿Abrir Pictogramas ahora?", responde S.
 
-- No necesita internet ni permisos de administrador.
+Quedan dos íconos en el Escritorio y en el menú Inicio:
+
+  Pictogramas                 Se ACTUALIZA SOLA cada vez que hay una versión
+                              nueva. Necesita internet la primera vez; después
+                              funciona también sin conexión.
+
+  Pictogramas (sin internet)  Copia de respaldo de la versión del pendrive,
+                              para un PC que nunca tuvo internet.
+
+- No necesita permisos de administrador.
 - Se abre en una ventana propia de Microsoft Edge (viene con Windows).
-- Para ACTUALIZAR: con la carpeta de la versión nueva, vuelve a hacer
-  doble clic en "Instalar Pictogramas". Las pautas y ajustes se mantienen.
 - Para QUITAR: doble clic en "Desinstalar Pictogramas".
 
 Si Windows muestra "Windows protegió su PC": toca "Más información" y
 luego "Ejecutar de todas formas".
+
+Las pautas guardadas y ajustes son distintos en cada ícono. Para pasar
+pautas de uno a otro: "Exportar" en uno e "Importar" en el otro.
 
 No guarda datos de pacientes.

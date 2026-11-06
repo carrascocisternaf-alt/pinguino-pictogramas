@@ -1,5 +1,9 @@
 # Cambios
 
+## Instalador 2026-11-06
+- El ícono **Pictogramas** del instalador de pendrive ahora abre la versión publicada en una ventana de Edge: se actualiza sola y funciona sin conexión después de abrirla una vez.
+- Nuevo ícono **Pictogramas (sin internet)** con la copia local de respaldo.
+
 ## 2.3.1 — 2026-11-05
 - Pestañas renombradas: **Etiqueta** → **Pictograma Medicación** y **Emergencia** → **Etiqueta tipo AVIS**.
 
